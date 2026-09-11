@@ -1,0 +1,17 @@
+# Enable Apache rewrite engine
+RewriteEngine On
+
+# Block direct access to everything inside /App
+# F = return HTTP 403 Forbidden
+# L = stop processing further rewrite rules
+RewriteRule ^App(/|$) - [F,L]
+
+# Only continue if the request is NOT a real file
+RewriteCond %{REQUEST_FILENAME} !-f
+# Only continue if the request is NOT a real directory
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Rewrite everything to index.php and pass the path as ?url=...
+# L = stop processing rules
+# QSA = keep existing query parameters (e.g. ?id=5)
+RewriteRule ^(.*)$ index.php?url=$1 [L,QSA]
