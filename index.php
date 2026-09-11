@@ -1,16 +1,23 @@
 <?php
-$conn = new mysqli('db', 'public', 'public', 'radservice');
+declare(strict_types=1);
+require_once 'App/Core/Router.php';
 
-if ($conn->connect_error) {
-    die('DB-Verbindung fehlgeschlagen: ' . $conn->connect_error);
+$router = new Router();
+$route = $router->getRoute();
+
+try {
+    switch ($route['base']) {
+        case 'home':
+            require_once 'App/View/home.php';
+            exit;
+
+        default:
+            http_response_code(404);
+            echo '<h1>404 - Page not found</h1>';
+            exit;
+    }
+} catch (Exception $e) {
+    header('Content-type: text/html; charset=UTF-8');
+    echo '<h1>Unexpected error occurred</h1>';
+    echo "<p>" . htmlspecialchars($e->getMessage()) . "</p>";
 }
-
-echo "<h1>RadService läuft!</h1>";
-echo "<p>DB-Verbindung erfolgreich.</p>";
-
-$result = $conn->query("SELECT * FROM bike_type");
-echo "<ul>";
-while ($row = $result->fetch_assoc()) {
-    echo "<li>" . htmlspecialchars($row['name']) . " – " . htmlspecialchars($row['base_price']) . " €</li>";
-}
-echo "</ul>";
