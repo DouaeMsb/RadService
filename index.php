@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 require_once 'App/Core/Router.php';
 
@@ -7,6 +8,7 @@ $route = $router->getRoute();
 
 try {
     switch ($route['base']) {
+        case '':
         case 'home':
             require_once 'App/View/home.php';
             exit;
